@@ -1,0 +1,9 @@
+steps:
+  # Testing building container
+  - name: gcr.io/cloud-builders/docker
+    args: [
+      'build',
+      '.',
+    ]
+    id: 'build-python-image'
+    waitFor: ['-']

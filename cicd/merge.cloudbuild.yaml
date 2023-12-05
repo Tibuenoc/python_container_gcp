@@ -1,0 +1,16 @@
+steps:
+# Build container
+  - name: gcr.io/cloud-builders/docker
+    entrypoint: bash
+    args:
+      - '-c'
+      - |-
+        export _VERSION=$(cat version.txt)
+        docker build -t ${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/support-containers/python3:latest \
+          -t ${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/support-containers/python3:python-3.9 \
+          -t ${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/support-containers/python3:$$_VERSION \
+          .
+    id: 'build-python-image'
+    waitFor: ['-']
+
+images: ['${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/support-containers/python3:latest']

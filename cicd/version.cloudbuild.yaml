@@ -1,0 +1,18 @@
+steps:
+# Checks if version of the current branch was increased
+    - name: 'gcr.io/cloud-builders/git'
+      entrypoint: bash
+      args:
+        - '-c'
+        - |-
+            _VERSION_BRANCH=$(cat version.txt)
+            git clone https://source.developers.google.com/p/vodafone-playground/r/github_nunorodrigues0099_python_container
+            cd github_nunorodrigues0099_python_container
+            git fetch origin
+            git pull origin main
+            git checkout main
+            _VERSION_MAIN=$(cat version.txt)
+            function version { echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'; }
+            (( 10#$(version $$_VERSION_MAIN) < 10#$(version $$_VERSION_BRANCH) )) || { echo "Branch version needs to be increased!"; exit 1; }
+      id: 'version'
+      waitFor: ['-']
